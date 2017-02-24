@@ -1,7 +1,5 @@
 package controllers
 
-import javax.inject.Inject
-
 import generated.tables.records.UserRecord
 import org.jooq.{DSLContext, SQLDialect}
 import org.jooq.impl.DSL
@@ -9,8 +7,11 @@ import play.api.db.Database
 import play.api.mvc.{Action, Controller}
 import service.GreetingService
 import generated.Tables._
+import scaldi.{Injectable, Injector}
 
-class Hello @Inject()(greetingService: GreetingService, val db:Database) extends Controller {
+class Hello (implicit inj:Injector) extends Controller with Injectable {
+  val db = inject[Database]
+  val greetingService = inject[GreetingService]
   def greet = Action {
     db.withConnection{
       connection =>

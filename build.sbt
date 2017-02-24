@@ -12,8 +12,11 @@ libraryDependencies ++= Seq(
   "org.jooq" % "jooq" % "3.7.0",
   "org.jooq" % "jooq-codegen-maven" % "3.7.0",
   "org.jooq" % "jooq-meta" % "3.7.0",
-  "org.mindrot" % "jbcrypt" % "0.4"
+  "org.mindrot" % "jbcrypt" % "0.4",
+  "org.scaldi" %% "scaldi-play" % "0.5.15"
 )
+
+routesGenerator := InjectedRoutesGenerator
 
 val generateJOOQ = taskKey[Seq[File]]("Generate JooQ classes")
 val generateJOOQTask = (baseDirectory, dependencyClasspath in Compile, runner in Compile, streams) map {

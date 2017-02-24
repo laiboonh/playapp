@@ -1,20 +1,20 @@
 package modules
 
-import javax.inject.Inject
-
-import com.google.inject.AbstractModule
+import generated.Tables._
 import org.jooq.SQLDialect
 import org.jooq.impl.DSL
 import play.api.db.Database
-import play.api.libs.Crypto
-import generated.Tables._
+import scaldi.{Injectable, Injector, Module}
+import service.HashingService
 
-class Fixtures @Inject()(val crypto: Crypto, val db: Database) extends DatabaseFixtures {
+class Fixtures (implicit inj:Injector) extends Injectable {
+  val db = inject[Database]
+  val hashingService = inject[HashingService]
   db.withTransaction {
     connection =>
       val sql = DSL.using(connection, SQLDialect.POSTGRES_9_4)
       if (sql.fetchCount(USER) == 0) {
-        val hashedPassword = crypto.sign("secret")
+        val hashedPassword = hashingService.hashpw("secret")
         sql
           .insertInto(USER)
           .columns(USER.EMAIL, USER.FIRSTNAME, USER.LASTNAME, USER.PASSWORD)
@@ -24,10 +24,7 @@ class Fixtures @Inject()(val crypto: Crypto, val db: Database) extends DatabaseF
   }
 }
 
-trait DatabaseFixtures
 
-class FixturesModule extends AbstractModule {
-  override def configure(): Unit = {
-    bind(classOf[DatabaseFixtures]).to(classOf[Fixtures]).asEagerSingleton()
-  }
+class FixturesModule extends Module {
+  binding to new Fixtures
 }
