@@ -4,12 +4,14 @@ version := "1.0"
 
 scalaVersion := "2.11.8"
 
+resolvers += "Spy Repository" at "http://files.couchbase.com/maven2"
+
 lazy val `PlayApp` = (project in file(".")).enablePlugins(PlayScala)
 
 enablePlugins(GatlingPlugin)
 
 libraryDependencies ++= Seq(
-  jdbc, evolutions,
+  jdbc, evolutions, cache,
   "org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
   "org.jooq" % "jooq" % "3.7.0",
   "org.jooq" % "jooq-codegen-maven" % "3.7.0",
@@ -18,7 +20,8 @@ libraryDependencies ++= Seq(
   "org.scaldi" %% "scaldi-play" % "0.5.15",
   "io.gatling.highcharts" % "gatling-charts-highcharts" % "2.2.2" % "test",
   "io.gatling" % "gatling-test-framework" % "2.2.2" % "test",
-  "org.scaldi" %% "scaldi-akka" % "0.5.8"
+  "org.scaldi" %% "scaldi-akka" % "0.5.8",
+  "com.github.mumoshu" %% "play2-memcached-play24" % "0.7.0"
 )
 
 routesGenerator := InjectedRoutesGenerator
