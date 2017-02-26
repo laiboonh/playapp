@@ -26,5 +26,5 @@ class Fixtures (implicit inj:Injector) extends Injectable {
 
 
 class FixturesModule extends Module {
-  binding to new Fixtures
+  bind [Fixtures] toNonLazy new Fixtures
 }
