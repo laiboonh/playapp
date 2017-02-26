@@ -17,7 +17,8 @@ libraryDependencies ++= Seq(
   "org.mindrot" % "jbcrypt" % "0.4",
   "org.scaldi" %% "scaldi-play" % "0.5.15",
   "io.gatling.highcharts" % "gatling-charts-highcharts" % "2.2.2" % "test",
-  "io.gatling" % "gatling-test-framework" % "2.2.2" % "test"
+  "io.gatling" % "gatling-test-framework" % "2.2.2" % "test",
+  "org.scaldi" %% "scaldi-akka" % "0.5.8"
 )
 
 routesGenerator := InjectedRoutesGenerator
