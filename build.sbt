@@ -4,36 +4,27 @@ version := "1.0"
 
 scalaVersion := "2.11.8"
 
-resolvers += "Spy Repository" at "http://files.couchbase.com/maven2"
-
 lazy val `PlayApp` = (project in file(".")).enablePlugins(PlayScala)
 
-enablePlugins(GatlingPlugin)
-
 libraryDependencies ++= Seq(
-  jdbc, evolutions, cache,
+  jdbc, cache,
   "org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
-  "org.jooq" % "jooq" % "3.7.0",
-  "org.jooq" % "jooq-codegen-maven" % "3.7.0",
-  "org.jooq" % "jooq-meta" % "3.7.0",
+  "org.scalikejdbc" %% "scalikejdbc" % "2.5.1",
+  "org.scalikejdbc" %% "scalikejdbc-test" % "2.5.1" % "test",
+  "org.scalikejdbc" %% "scalikejdbc-config" % "2.5.1",
+  "org.scalikejdbc" %% "scalikejdbc-play-initializer" % "2.5.1",
+  "org.scalikejdbc" %% "scalikejdbc-play-fixture" % "2.5.1",
+  "org.scalikejdbc" %% "scalikejdbc-play-dbapi-adapter" % "2.5.1",
+
+  "org.flywaydb" %% "flyway-play" % "3.0.+",
+
   "org.mindrot" % "jbcrypt" % "0.4",
-  "org.scaldi" %% "scaldi-play" % "0.5.15",
-  "io.gatling.highcharts" % "gatling-charts-highcharts" % "2.2.2" % "test",
-  "io.gatling" % "gatling-test-framework" % "2.2.2" % "test",
-  "org.scaldi" %% "scaldi-akka" % "0.5.8",
-  "com.github.mumoshu" %% "play2-memcached-play24" % "0.7.0"
+
+  "com.github.tototoshi" %% "play-json4s-native" % "0.5.+",
+
+  specs2 % "test"
 )
 
-routesGenerator := InjectedRoutesGenerator
+scalikejdbcSettings
 
-val generateJOOQ = taskKey[Seq[File]]("Generate JooQ classes")
-val generateJOOQTask = (baseDirectory, dependencyClasspath in Compile, runner in Compile, streams) map {
-  (base, cp, r, s) =>
-    toError(r.run(
-      "org.jooq.util.GenerationTool",
-      cp.files,
-      Array("conf/jooq.xml"),
-      s.log))
-    ((base / "app" / "generated") ** "*.scala").get
-}
-generateJOOQ <<= generateJOOQTask
+routesGenerator := InjectedRoutesGenerator
